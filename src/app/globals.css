@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%; /* Black */
+    --foreground: 0 0% 100%; /* White */
+
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 266 100% 50%; /* Purple */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 0 0% 53.3%; /* #888888 */
+
+    --accent: 266 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: #333333;
+    --input: #333333;
+    --ring: 266 100% 50%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    cursor: none;
+  }
+  
+  .section-title {
+      @apply text-sm font-normal uppercase tracking-[2px] text-muted-foreground mb-2;
+  }
+  
+  .section-subtitle {
+        @apply text-muted-foreground mb-8;
+  }
+  
+   .super-heading {
+      @apply font-heading text-6xl font-bold leading-tight mb-6;
+  }
+  
+  .sub-heading {
+      @apply text-xl text-muted-foreground max-w-2xl mb-16;
+  }
+  
+  .page-section {
+      @apply py-24 border-b border-border;
+  }
+  
+  .page-section:last-child {
+      @apply border-b-0;
+  }
+}
+
+.form-input, .form-select {
+    @apply w-full bg-transparent border-none border-b border-border text-foreground text-lg py-2 transition-all duration-300;
+}
+
+.form-input:focus, .form-select:focus {
+    @apply outline-none border-primary ring-0;
+}
+
+.form-input:hover, .form-select:hover {
+    @apply border-muted-foreground;
+}
+
+.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
+
+/* Selection styling */
+::selection {
+  background: hsl(var(--primary) / 0.3);
+  color: hsl(var(--foreground));
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Scroll reveal utilities */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms ease, transform 600ms ease;
+  transition-delay: var(--stagger-delay, 0ms);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hide Next.js development toolbar */
+#nextjs__container_root_layout_router,
+div[data-nextjs-dialog-overlay],
+div[data-nextjs-dialog],
+button[aria-label="Route"],
+button[aria-label="Turbopack"],
+button[aria-label="Preferences"],
+nextjs-portal {
+  display: none !important;
+}
