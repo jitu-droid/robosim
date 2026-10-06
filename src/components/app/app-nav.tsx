@@ -3,9 +3,11 @@ import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
 const navLinks = [
-  { href: '#robots', label: 'Robots', icon: '🤖' },
-  { href: '#planning', label: 'Planning', icon: '🗺️' },
-  { href: '#simulation', label: 'Simulation', icon: '▶️' },
+  { href: '#service', label: 'Service', icon: '☁️' },
+  { href: '#robots', label: 'Robot Apps', icon: '🤖' },
+  { href: '#worlds', label: 'WorldForge', icon: '🌍' },
+  { href: '#jobs', label: 'Jobs', icon: '🚀' },
+  { href: '#simulation', label: 'Viewer', icon: '📺' },
   { href: '#analytics', label: 'Analytics', icon: '📊' },
 ];
 
@@ -39,7 +41,7 @@ export default function AppNav() {
 
   return (
     <nav className={cn(
-      "flex gap-8 md:gap-12 py-6 border-b border-border mb-16 flex-wrap transition-all duration-300",
+      "flex gap-x-6 gap-y-3 md:gap-x-10 py-4 md:py-6 border-b border-border mb-8 overflow-x-auto whitespace-nowrap md:flex-wrap transition-all duration-300",
       isSticky && "sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b-primary/30 shadow-lg shadow-primary/5"
     )}>
       {navLinks.map(({ href, label, icon }) => (
@@ -47,7 +49,7 @@ export default function AppNav() {
           key={href}
           href={href}
           className={cn(
-            'text-sm uppercase tracking-[1.5px] pb-2 border-b-2 transition-all duration-300 flex items-center gap-2 group',
+            'shrink-0 text-xs md:text-sm uppercase tracking-[1.5px] pb-2 border-b-2 transition-all duration-300 flex items-center gap-2 group',
             activeLink === href
               ? 'text-foreground border-primary scale-105'
               : 'text-muted-foreground border-transparent hover:text-foreground hover:border-primary/50'

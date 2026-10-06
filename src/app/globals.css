@@ -28,8 +28,8 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: #333333;
-    --input: #333333;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
     --ring: 266 100% 50%;
 
     --radius: 0.5rem;
@@ -73,6 +73,11 @@
   .page-section:last-child {
       @apply border-b-0;
   }
+}
+
+/* Let grid children shrink so wide tables scroll inside their own container instead of the page. */
+.grid > * {
+    min-width: 0;
 }
 
 .form-input, .form-select {

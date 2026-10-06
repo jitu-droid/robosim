@@ -4,8 +4,8 @@ import { Toaster } from '@/components/ui/toaster';
 import CustomCursor from '@/components/app/custom-cursor';
 
 export const metadata: Metadata = {
-  title: 'RoboSim',
-  description: 'A robot path planning and simulation system',
+  title: 'RoboSim · AWS RoboMaker Simulator',
+  description: 'An educational simulation of AWS RoboMaker: robot applications, WorldForge worlds, simulation jobs, logs, outputs and analytics.',
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',
@@ -25,7 +25,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Inter:wght@400&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased bg-background px-6 sm:px-12 md:px-24">
+      <body className="font-body antialiased bg-background px-4 sm:px-8 lg:px-16">
         <CustomCursor />
         {children}
         <Toaster />

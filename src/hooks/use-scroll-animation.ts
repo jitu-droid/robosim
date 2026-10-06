@@ -23,10 +23,12 @@ export const useScrollAnimation = () => {
                 node.classList.add('visible');
               }, idx * 90);
             });
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      // A ratio threshold would never fire for sections taller than ~10 viewports, so use a margin instead.
+      { threshold: 0, rootMargin: '0px 0px -80px 0px' }
     );
 
     const elements = document.querySelectorAll('.page-section');

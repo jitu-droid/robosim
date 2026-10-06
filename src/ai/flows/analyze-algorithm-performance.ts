@@ -36,9 +36,17 @@ const analyzeAlgorithmPerformancePrompt = ai.definePrompt({
   name: 'analyzeAlgorithmPerformancePrompt',
   input: {schema: AnalyzeAlgorithmPerformanceInputSchema},
   output: {schema: AnalyzeAlgorithmPerformanceOutputSchema},
-  prompt: `You are an AI expert in robotics and path planning. Your task is to analyze the performance of different path planning algorithms based on the provided simulation results.
+  prompt: `You are an AI expert in robotics and path planning, reviewing results from RoboSim, a simulator of the AWS RoboMaker simulation service.
 
-    Provide a detailed comparison of the algorithms, highlighting their strengths and weaknesses, and suggest potential optimizations. Explain which algorithms were most successful and why.
+    The results below come from simulation jobs that ran A*, RRT and Potential Field planners on generated worlds (warehouse, maze, office, clutter). Metrics: path length (m), optimality (% of the A* shortest path), planning time (ms), nodes expanded, simulated traversal time (s), energy (J), turns, minimum obstacle clearance (m), success/failure and failure reasons.
+
+    Write a concise analysis in Markdown with these sections:
+    ## Summary (2-3 sentences naming the overall best algorithm for these runs)
+    ## Algorithm comparison (one bullet per algorithm: strengths, weaknesses, with numbers from the data)
+    ## Failures (explain why any jobs failed, e.g. local minima for Potential Field)
+    ## Recommendations (3 bullets: which planner to use for which world type, and parameter tweaks)
+
+    Only use numbers that appear in the data. Keep it under 300 words.
 
     Simulation Results: {{{simulationResults}}} `,
 });
