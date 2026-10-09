@@ -5,16 +5,15 @@ export interface WorldTemplate {
   id: WorldTemplateId;
   name: string;
   description: string;
-  icon: string;
   usesDensity: boolean;
 }
 
 export const WORLD_TEMPLATES: WorldTemplate[] = [
-  { id: 'empty', name: 'Empty Room', description: 'Open floor with a few pillars. Baseline for tuning.', icon: '⬜', usesDensity: false },
-  { id: 'warehouse', name: 'Warehouse', description: 'Rows of shelving racks with randomised cross-aisles.', icon: '📦', usesDensity: true },
-  { id: 'maze', name: 'Maze', description: 'Perfect maze — a single route between any two cells.', icon: '🌀', usesDensity: false },
-  { id: 'office', name: 'Office Floor', description: 'Rooms, corridors and doorways, like a WorldForge residence.', icon: '🏢', usesDensity: true },
-  { id: 'clutter', name: 'Random Clutter', description: 'Randomly scattered obstacles at a chosen density.', icon: '🪨', usesDensity: true },
+  { id: 'empty', name: 'Empty Room', description: 'Open floor with a few pillars. Baseline for tuning.', usesDensity: false },
+  { id: 'warehouse', name: 'Warehouse', description: 'Rows of shelving racks with randomised cross-aisles.', usesDensity: true },
+  { id: 'maze', name: 'Maze', description: 'Perfect maze — a single route between any two cells.', usesDensity: false },
+  { id: 'office', name: 'Office Floor', description: 'Rooms, corridors and doorways, like a WorldForge residence.', usesDensity: true },
+  { id: 'clutter', name: 'Random Clutter', description: 'Randomly scattered obstacles at a chosen density.', usesDensity: true },
 ];
 
 export const WORLD_SIZES: Record<WorldSize, { label: string; dim: number; simulationUnits: number }> = {

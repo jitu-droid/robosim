@@ -56,6 +56,18 @@ function buildRobot(type: RobotType, color: string): THREE.Group {
   return g;
 }
 
+const VIEW_DIRECTION = new THREE.Vector3(0.1, 0.72, 0.78).normalize();
+
+/** Places the camera so a world of the given span fits the viewport at any aspect ratio. */
+function fitCamera(camera: THREE.PerspectiveCamera, controls: OrbitControls, span: number) {
+  const vHalf = THREE.MathUtils.degToRad(camera.fov / 2);
+  const hHalf = Math.atan(Math.tan(vHalf) * camera.aspect);
+  const distance = Math.max((span * 0.62) / Math.tan(vHalf), (span * 0.75) / Math.tan(hHalf));
+  camera.position.copy(VIEW_DIRECTION).multiplyScalar(distance);
+  controls.target.set(0, 0, 0);
+  controls.update();
+}
+
 function disposeGroup(group: THREE.Object3D) {
   group.traverse(obj => {
     const mesh = obj as THREE.Mesh;
@@ -80,8 +92,8 @@ export default function SimulationViewer({ world, jobs }: SimulationViewerProps)
     renderer.shadowMap.enabled = true;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x07070a);
-    scene.fog = new THREE.Fog(0x07070a, 40, 90);
+    scene.background = new THREE.Color(0x0b0b0e);
+    scene.fog = new THREE.Fog(0x0b0b0e, 40, 90);
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 500);
     const controls = new OrbitControls(camera, canvas);
@@ -113,6 +125,8 @@ export default function SimulationViewer({ world, jobs }: SimulationViewerProps)
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+      const span = content.userData.span as number | undefined;
+      if (span) fitCamera(camera, controls, span);
     };
     resize();
     const ro = new ResizeObserver(resize);
@@ -228,13 +242,10 @@ export default function SimulationViewer({ world, jobs }: SimulationViewerProps)
       r.robots.push({ jobId: job.id, mesh });
     });
 
-    const span = Math.max(world.width, world.height);
-    const fit = r.camera.aspect < 1.2 ? 1.2 / r.camera.aspect : 1; // pull back on portrait screens
-    r.camera.position.set(span * 0.1 * fit, span * 0.72 * fit, span * 0.78 * fit);
-    r.controls.target.set(0, 0, 0);
-    r.controls.update();
+    r.content.userData.span = Math.max(world.width, world.height);
+    fitCamera(r.camera, r.controls, r.content.userData.span);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [world, pathKey]);
 
-  return <canvas ref={canvasRef} className="h-[420px] w-full rounded-lg border border-border md:h-[520px]" />;
+  return <canvas ref={canvasRef} className="block h-[360px] w-full md:h-[480px]" />;
 }

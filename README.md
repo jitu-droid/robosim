@@ -39,10 +39,10 @@ Robots navigate with real path planners: **A\*** (8-connected, optimal on the gr
 
 ## Enhancements beyond RoboMaker
 
-1. **🏁 Algorithm benchmark.** One click runs A\*, RRT and Potential Field on the same world, start and goal. All three robots race in the 3D viewer, and a results table ranks them on path length, optimality, planning time, nodes expanded, time and energy.
-2. **🧠 AI performance insights.** Google Gemini (through Genkit) analyses every finished job and explains which planner wins, why jobs failed and what to tune. If no API key is set, a built-in rule-based analyser is used instead.
-3. **💰 Cost explorer.** Estimates SU-hours and dollar cost per job and per algorithm at $0.40/SU-hour, and projects the cost of 1,000 runs.
-4. **🧮 Richer metrics.** Every job records optimality vs. the A\* shortest path, nodes expanded, energy, turns and minimum obstacle clearance.
+1. **Algorithm benchmark.** One click runs A\*, RRT and Potential Field on the same world, start and goal. All three robots race in the 3D viewer, and a results table ranks them on path length, optimality, planning time, nodes expanded, time and energy.
+2. **AI performance insights.** Google Gemini (through Genkit) analyses every finished job and explains which planner wins, why jobs failed and what to tune. If no API key is set, a built-in rule-based analyser is used instead.
+3. **Cost explorer.** Estimates SU-hours and dollar cost per job and per algorithm at $0.40/SU-hour, and projects the cost of 1,000 runs.
+4. **Richer metrics.** Every job records optimality vs. the A\* shortest path, nodes expanded, energy, turns and minimum obstacle clearance.
 
 ## Tech stack
 
@@ -79,13 +79,17 @@ GEMINI_API_KEY=your-key-here
 src/
   app/                    page, layout, server action for AI analysis
   ai/                     Genkit setup and the Gemini analysis flow
-  components/app/         one component per console section
-    service-overview.tsx  "About AWS RoboMaker" page and concept mapping
-    robots-section.tsx    Robot applications
-    worlds-section.tsx    WorldForge
-    jobs-section.tsx      Simulation jobs, batches, benchmark
-    simulation-*.tsx      3D viewer, telemetry, logs, S3 outputs, CLI
-    analytics-section.tsx Charts, benchmark table, AI insights, cost explorer
+  components/app/         console UI, one view per page
+    console-shell.tsx     top bar and sidebar navigation
+    overview-view.tsx     dashboard and getting-started checklist
+    robots-view.tsx       Robot applications
+    worlds-view.tsx       WorldForge templates, generation jobs, worlds
+    jobs-view.tsx         Simulation job list and batches
+    new-job-view.tsx      Create job, benchmark and batch launcher
+    job-detail-view.tsx   3D viewer, lifecycle, metrics, logs, S3 outputs, CLI
+    analytics-view.tsx    Charts, benchmark table, AI insights, cost explorer
+    about-view.tsx        "About AWS RoboMaker" and concept mapping
+  lib/router.ts           hash-based page routing (#/jobs, #/jobs/<id>, ...)
   lib/robomaker/          the simulated service
     engine.ts             control loop: job lifecycle, scheduling, concurrency
     store.tsx             React state + localStorage persistence

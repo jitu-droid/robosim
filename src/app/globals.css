@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%; /* Black */
-    --foreground: 0 0% 100%; /* White */
+    --background: 240 7% 4%;
+    --foreground: 240 6% 94%;
 
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
+    --card: 240 6% 7%;
+    --card-foreground: 240 6% 94%;
 
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 240 6% 8%;
+    --popover-foreground: 240 6% 94%;
 
-    --primary: 266 100% 50%; /* Purple */
+    --primary: 258 90% 66%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 240 5% 13%;
+    --secondary-foreground: 240 6% 94%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 0 0% 53.3%; /* #888888 */
+    --muted: 240 5% 12%;
+    --muted-foreground: 240 5% 60%;
 
-    --accent: 266 100% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 240 5% 14%;
+    --accent-foreground: 240 6% 94%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 266 100% 50%;
+    --border: 240 5% 15%;
+    --input: 240 5% 18%;
+    --ring: 258 90% 66%;
 
     --radius: 0.5rem;
   }
@@ -40,113 +40,57 @@
   * {
     @apply border-border;
   }
-  
+
   html {
-    scroll-behavior: smooth;
+    color-scheme: dark;
   }
-  
+
   body {
-    @apply bg-background text-foreground;
-    cursor: none;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'cv11', 'ss01';
   }
-  
-  .section-title {
-      @apply text-sm font-normal uppercase tracking-[2px] text-muted-foreground mb-2;
+
+  ::selection {
+    background: hsl(var(--primary) / 0.35);
   }
-  
-  .section-subtitle {
-        @apply text-muted-foreground mb-8;
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
-  
-   .super-heading {
-      @apply font-heading text-6xl font-bold leading-tight mb-6;
-  }
-  
-  .sub-heading {
-      @apply text-xl text-muted-foreground max-w-2xl mb-16;
-  }
-  
-  .page-section {
-      @apply py-24 border-b border-border;
-  }
-  
-  .page-section:last-child {
-      @apply border-b-0;
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground;
   }
 }
 
 /* Let grid children shrink so wide tables scroll inside their own container instead of the page. */
 .grid > * {
-    min-width: 0;
+  min-width: 0;
 }
 
-.form-input, .form-select {
-    @apply w-full bg-transparent border-none border-b border-border text-foreground text-lg py-2 transition-all duration-300;
-}
-
-.form-input:focus, .form-select:focus {
-    @apply outline-none border-primary ring-0;
-}
-
-.form-input:hover, .form-select:hover {
-    @apply border-muted-foreground;
-}
-
-.visible {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
-}
-
-/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
+  background: hsl(var(--border));
+  border: 2px solid hsl(var(--background));
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary));
+  background: hsl(var(--muted-foreground) / 0.5);
 }
 
-/* Selection styling */
-::selection {
-  background: hsl(var(--primary) / 0.3);
-  color: hsl(var(--foreground));
-}
-
-/* Focus visible styles for accessibility */
-:focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-}
-
-/* Scroll reveal utilities */
-.reveal {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 600ms ease, transform 600ms ease;
-  transition-delay: var(--stagger-delay, 0ms);
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Hide Next.js development toolbar */
-#nextjs__container_root_layout_router,
-div[data-nextjs-dialog-overlay],
-div[data-nextjs-dialog],
-button[aria-label="Route"],
-button[aria-label="Turbopack"],
-button[aria-label="Preferences"],
+/* Hide the Next.js development toolbar */
 nextjs-portal {
   display: none !important;
 }

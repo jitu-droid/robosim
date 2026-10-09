@@ -1,35 +1,34 @@
 # Demo guide (about 5 minutes)
 
-Before the demo, click **Reset demo** (top right) so you start from clean data: 2 robot applications, 4 worlds, no jobs.
+Before the demo, click **Reset demo** in the top bar so you start from clean data: 2 robot applications, 4 worlds, no jobs.
 
 ## 1. Explain the service (Understanding of AWS service — 2 marks)
 
-Open the **Service** section and talk through it:
+Open **About RoboMaker** in the sidebar and talk through it:
 
 - RoboMaker ran robot software (ROS) inside simulated worlds (Gazebo) on AWS compute, so teams could test without real robots.
-- Workflow: robot application → simulation world → simulation job → monitor (CloudWatch logs) → outputs (S3).
+- Workflow: robot application, then simulation world, then simulation job, then monitoring (CloudWatch logs), then outputs (S3).
 - Billing was per simulation-unit hour (1 SU = 1 vCPU + 2 GB RAM).
 - Point at the mapping table: every RoboMaker concept has a matching feature here.
 - Mention that AWS ended support in September 2025, and that this project recreates its workflow.
 
 ## 2. Core simulation (3 marks)
 
-1. **Robot Applications.** Create one (e.g. `Delivery-Bot`, Mobile robot, 1.5 m/s). Show the ARN and click the upload icon to publish v2. Explain that jobs pin the version they launched with.
-2. **WorldForge.** Pick *Warehouse*, Medium, 3 worlds, and click Generate. Point out that it runs as a world generation job, and that the same seed always gives the same layout.
-3. **Simulation Jobs.** Choose the robot app and the *Random Clutter* world, click the map to set start and goal, and click **Create job**.
-   - Watch the status go **Pending → Preparing → Running → Completed**.
-   - Click **Show equivalent AWS CLI command**.
-4. **Viewer.** The robot drives the planned path in 3D (drag to orbit). Open the tabs:
+1. **Robot applications.** Click *Create robot application* (e.g. `Delivery-Bot`, Mobile robot, 1.5 m/s). Show the ARN, then publish v2 with the upload icon. Explain that jobs pin the version they launched with.
+2. **WorldForge worlds.** Pick *Warehouse*, Medium, 3 worlds, and generate. It runs as a world generation job, and the same seed always gives the same layout.
+3. **Simulation jobs → Create simulation job.** Choose the robot app and *Random Clutter #2*, click the map to set start and goal, open *Equivalent AWS CLI command*, then click **Create job**.
+4. **Job page.** Follow the lifecycle card (Pending, Preparing, Running, Completed) while the robot drives in 3D (drag to orbit). Then open the tabs:
    - **Logs**: CloudWatch-style stream with live tail and filter.
-   - **S3**: download `result.json` and `trajectory.csv`.
-5. **Batch.** Click **Batch over worlds**, select all worlds, set maxConcurrency 2, and start. Show jobs waiting in Pending until a slot frees up. Cancel one job to show **Terminating → Terminated**.
+   - **Outputs (S3)**: download `result.json` and `trajectory.csv`.
+   - **AWS CLI**: the equivalent `create-simulation-job` call.
+5. **Batch.** Back on *Create simulation job*, click **Batch across worlds**, select all worlds, set maxConcurrency 2, and start. On the jobs list, show jobs waiting in Pending until a slot frees up. Cancel one to show Terminating, then Terminated.
 
 ## 3. Enhancements (2 marks)
 
-1. **🏁 Benchmark all 3 planners** on *Random Clutter #2*. All three robots race in the viewer. Then open **Analytics → Benchmark results** to see the ★ best value per metric.
+1. **Benchmark all planners** on *Random Clutter #2* (or **Run demo benchmark** on the Overview page). All three robots race in the viewer. Then open **Analytics → Benchmark results**, where the best value in each column is highlighted.
 2. Benchmark again on *Office Floor #1* or *Maze #3*. Potential Field fails with `RobotApplicationCrash` ("trapped in a local minimum"), which shows why planner choice matters.
 3. **AI insights.** Click *Analyse results*. Gemini explains the comparison and the failures.
-4. **Cost explorer.** Show the cost per algorithm and the 1,000-run projection.
+4. **Cost explorer.** Show the cost per planner and the 1,000-run projection.
 
 ## Likely questions
 

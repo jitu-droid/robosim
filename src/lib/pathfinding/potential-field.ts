@@ -95,6 +95,24 @@ export function potentialField(grid: PlanningGrid, start: Point, goal: Point, ra
   return { success: false, path: [], nodesExpanded: steps, message: `Did not converge within ${MAX_STEPS} steps` };
 }
 
+/** Cuts out loops left by escape walks: when the path comes back near an earlier point, skip the detour. */
+function pruneLoops(path: Point[]): Point[] {
+  const out: Point[] = [];
+  let i = 0;
+  while (i < path.length) {
+    out.push(path[i]);
+    let next = i + 1;
+    for (let j = path.length - 1; j > i + 3; j--) {
+      if (distance(path[i], path[j]) < 0.35) {
+        next = j + 1;
+        break;
+      }
+    }
+    i = next;
+  }
+  return out;
+}
+
 function downsample(path: Point[]): Point[] {
-  return path.filter((_, i) => i % 2 === 0 || i === path.length - 1);
+  return pruneLoops(path).filter((_, i, arr) => i % 2 === 0 || i === arr.length - 1);
 }

@@ -31,10 +31,10 @@ export default function WorldMap({ world, start, goal, paths, onCellClick, class
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const cell = size / Math.max(world.width, world.height);
 
-      ctx.fillStyle = '#0b0b0f';
+      ctx.fillStyle = '#0d0d10';
       ctx.fillRect(0, 0, size, size);
       if (cell >= 6) {
-        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.035)';
         ctx.lineWidth = 1;
         for (let i = 0; i <= world.width; i++) {
           ctx.beginPath();
@@ -49,7 +49,7 @@ export default function WorldMap({ world, start, goal, paths, onCellClick, class
           ctx.stroke();
         }
       }
-      ctx.fillStyle = '#3f3f50';
+      ctx.fillStyle = '#3b3b48';
       for (const o of world.obstacles) ctx.fillRect(o.x * cell, o.y * cell, cell, cell);
 
       for (const path of paths ?? []) {
@@ -86,7 +86,7 @@ export default function WorldMap({ world, start, goal, paths, onCellClick, class
   return (
     <canvas
       ref={canvasRef}
-      className={cn('aspect-square w-full rounded-md border border-border', onCellClick && 'cursor-crosshair', className)}
+      className={cn('aspect-square w-full rounded', onCellClick && 'cursor-crosshair', className)}
       onClick={e => {
         if (!onCellClick) return;
         const rect = e.currentTarget.getBoundingClientRect();

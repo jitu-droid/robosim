@@ -1,57 +1,99 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState, type ComponentType, type ReactNode } from 'react';
 import { Check, Copy } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
-import type { JobStatus, SimulationJob } from '@/lib/robomaker/types';
+import { ALGORITHM_COLORS, ALGORITHM_LABELS, type Algorithm, type JobStatus, type SimulationJob } from '@/lib/robomaker/types';
 
-export function SectionHeader({ icon, title, subtitle, apis }: { icon: string; title: string; subtitle: string; apis?: string[] }) {
+type Icon = ComponentType<{ className?: string }>;
+
+export function PageHeader({
+  title,
+  description,
+  actions,
+  breadcrumb,
+}: {
+  title: ReactNode;
+  description?: ReactNode;
+  actions?: ReactNode;
+  breadcrumb?: ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-8">
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 shrink-0 rounded-full bg-primary/10 flex items-center justify-center">
-          <span className="text-2xl">{icon}</span>
-        </div>
-        <div>
-          <h2 className="font-heading text-3xl font-bold">{title}</h2>
-          <p className="text-sm text-muted-foreground">{subtitle}</p>
-        </div>
+    <div className="mb-6 flex flex-col gap-4 border-b border-border pb-6 lg:flex-row lg:items-end lg:justify-between">
+      <div className="min-w-0">
+        {breadcrumb && <div className="mb-2 text-xs text-muted-foreground">{breadcrumb}</div>}
+        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        {description && <p className="mt-1 max-w-3xl text-sm text-muted-foreground">{description}</p>}
       </div>
-      {apis && (
-        <div className="flex flex-wrap gap-2">
-          {apis.map(api => (
-            <code key={api} className="rounded border border-primary/30 bg-primary/5 px-2 py-1 text-[11px] text-primary/90">
-              {api}
-            </code>
-          ))}
-        </div>
-      )}
+      {actions && <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>}
     </div>
   );
 }
 
-export function Panel({ className, children }: { className?: string; children: ReactNode }) {
+export function Card({ className, children }: { className?: string; children: ReactNode }) {
+  return <div className={cn('rounded-lg border border-border bg-card', className)}>{children}</div>;
+}
+
+export function CardHeader({ title, description, actions, className }: { title: ReactNode; description?: ReactNode; actions?: ReactNode; className?: string }) {
   return (
-    <div className={cn('rounded-lg border border-border bg-gradient-to-br from-background via-background to-primary/5 p-6', className)}>
-      {children}
+    <div className={cn('flex flex-wrap items-start justify-between gap-3 border-b border-border px-5 py-4', className)}>
+      <div className="min-w-0">
+        <h2 className="text-sm font-semibold">{title}</h2>
+        {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
+      </div>
+      {actions}
     </div>
   );
 }
 
-export function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: ReactNode }) {
+export function StatTile({ label, value, sub, icon: IconCmp }: { label: string; value: ReactNode; sub?: ReactNode; icon?: Icon }) {
   return (
-    <label htmlFor={htmlFor} className="block text-xs uppercase tracking-[1.5px] text-muted-foreground mb-2">
-      {children}
-    </label>
+    <Card className="p-4">
+      <div className="flex items-center justify-between">
+        <p className="eyebrow">{label}</p>
+        {IconCmp && <IconCmp className="h-4 w-4 text-muted-foreground" />}
+      </div>
+      <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">{value}</p>
+      {sub && <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>}
+    </Card>
   );
 }
 
-export function EmptyState({ icon, title, children }: { icon: string; title: string; children?: ReactNode }) {
+export function FieldLabel({ htmlFor, children, hint }: { htmlFor?: string; children: ReactNode; hint?: ReactNode }) {
   return (
-    <div className="rounded-lg border border-dashed border-border p-10 text-center">
-      <div className="text-4xl mb-3">{icon}</div>
-      <p className="font-semibold mb-1">{title}</p>
-      {children && <div className="text-sm text-muted-foreground">{children}</div>}
+    <div className="mb-1.5 flex items-baseline justify-between gap-2">
+      <label htmlFor={htmlFor} className="text-xs font-medium text-foreground/90">
+        {children}
+      </label>
+      {hint && <span className="text-[11px] text-muted-foreground">{hint}</span>}
+    </div>
+  );
+}
+
+export function FieldError({ children }: { children?: ReactNode }) {
+  if (!children) return null;
+  return <p className="mt-1 text-xs text-destructive">{children}</p>;
+}
+
+export function EmptyState({ icon: IconCmp, title, children, action }: { icon: Icon; title: string; children?: ReactNode; action?: ReactNode }) {
+  return (
+    <div className="flex flex-col items-center rounded-lg border border-dashed border-border px-6 py-12 text-center">
+      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+        <IconCmp className="h-5 w-5 text-muted-foreground" />
+      </div>
+      <p className="text-sm font-medium">{title}</p>
+      {children && <div className="mt-1 max-w-sm text-sm text-muted-foreground">{children}</div>}
+      {action && <div className="mt-4">{action}</div>}
     </div>
   );
 }
@@ -61,39 +103,88 @@ export function CopyText({ text, className }: { text: string; className?: string
   return (
     <button
       type="button"
-      onClick={() => {
+      onClick={e => {
+        e.stopPropagation();
         navigator.clipboard?.writeText(text);
         setCopied(true);
         setTimeout(() => setCopied(false), 1200);
       }}
       className={cn('group inline-flex max-w-full items-center gap-1.5 font-mono text-[11px] text-muted-foreground hover:text-foreground', className)}
-      title="Copy"
+      title="Copy to clipboard"
     >
       <span className="truncate">{text}</span>
-      {copied ? <Check className="h-3 w-3 shrink-0 text-green-500" /> : <Copy className="h-3 w-3 shrink-0 opacity-50 group-hover:opacity-100" />}
+      {copied ? <Check className="h-3 w-3 shrink-0 text-emerald-400" /> : <Copy className="h-3 w-3 shrink-0 opacity-0 transition-opacity group-hover:opacity-100" />}
     </button>
   );
 }
 
-const STATUS_STYLES: Record<JobStatus, { className: string; pulse?: boolean }> = {
-  Pending: { className: 'bg-zinc-500/15 text-zinc-300 border-zinc-500/30' },
-  Preparing: { className: 'bg-sky-500/15 text-sky-300 border-sky-500/30', pulse: true },
-  Running: { className: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30', pulse: true },
-  RunningFailed: { className: 'bg-orange-500/15 text-orange-300 border-orange-500/30', pulse: true },
-  Terminating: { className: 'bg-orange-500/15 text-orange-300 border-orange-500/30', pulse: true },
-  Completed: { className: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
-  Failed: { className: 'bg-red-500/15 text-red-300 border-red-500/40' },
-  Terminated: { className: 'bg-zinc-500/15 text-zinc-400 border-zinc-500/30' },
+const STATUS_STYLES: Record<JobStatus, { className: string; live?: boolean }> = {
+  Pending: { className: 'text-zinc-300 bg-zinc-500/10 ring-zinc-500/25' },
+  Preparing: { className: 'text-sky-300 bg-sky-500/10 ring-sky-500/25', live: true },
+  Running: { className: 'text-emerald-300 bg-emerald-500/10 ring-emerald-500/25', live: true },
+  RunningFailed: { className: 'text-orange-300 bg-orange-500/10 ring-orange-500/25', live: true },
+  Terminating: { className: 'text-orange-300 bg-orange-500/10 ring-orange-500/25', live: true },
+  Completed: { className: 'text-emerald-300 bg-emerald-500/10 ring-emerald-500/25' },
+  Failed: { className: 'text-red-300 bg-red-500/10 ring-red-500/25' },
+  Terminated: { className: 'text-zinc-400 bg-zinc-500/10 ring-zinc-500/20' },
 };
 
 export function StatusBadge({ job }: { job: Pick<SimulationJob, 'status' | 'goalReached'> }) {
   const goalMissed = job.status === 'Completed' && job.goalReached === false;
-  const style = goalMissed ? { className: 'bg-amber-500/15 text-amber-300 border-amber-500/40' } : STATUS_STYLES[job.status];
+  const style = goalMissed ? { className: 'text-amber-300 bg-amber-500/10 ring-amber-500/25', live: false } : STATUS_STYLES[job.status];
   return (
-    <span className={cn('inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-medium', style.className)}>
-      <span className={cn('h-1.5 w-1.5 rounded-full bg-current', 'pulse' in style && style.pulse && 'animate-pulse')} />
-      {goalMissed ? 'Completed · goal missed' : job.status}
+    <span className={cn('inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset', style.className)}>
+      <span className="relative flex h-1.5 w-1.5">
+        {style.live && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-current opacity-60" />}
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-current" />
+      </span>
+      {goalMissed ? 'Completed (goal missed)' : job.status}
     </span>
+  );
+}
+
+export function AlgorithmTag({ algorithm, className }: { algorithm: Algorithm; className?: string }) {
+  return (
+    <span className={cn('inline-flex items-center gap-1.5 whitespace-nowrap', className)}>
+      <span className="h-2 w-2 shrink-0 rounded-sm" style={{ background: ALGORITHM_COLORS[algorithm] }} />
+      {ALGORITHM_LABELS[algorithm]}
+    </span>
+  );
+}
+
+/** Wraps an action in a confirmation dialog. */
+export function ConfirmDialog({
+  open,
+  onOpenChange,
+  title,
+  description,
+  confirmLabel = 'Confirm',
+  destructive,
+  onConfirm,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description: ReactNode;
+  confirmLabel?: string;
+  destructive?: boolean;
+  onConfirm: () => void;
+}) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction className={cn(destructive && 'bg-destructive text-destructive-foreground hover:bg-destructive/90')} onClick={onConfirm}>
+            {confirmLabel}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
@@ -102,7 +193,7 @@ export function SimpleMarkdown({ text }: { text: string }) {
   const inline = (s: string) =>
     s.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
       part.startsWith('**') && part.endsWith('**') ? (
-        <strong key={i} className="text-foreground">
+        <strong key={i} className="font-medium text-foreground">
           {part.slice(2, -2)}
         </strong>
       ) : (
@@ -116,15 +207,15 @@ export function SimpleMarkdown({ text }: { text: string }) {
         if (!t) return null;
         if (t.startsWith('#')) {
           return (
-            <h4 key={i} className="pt-3 font-heading text-base font-bold text-foreground first:pt-0">
+            <h4 key={i} className="pt-3 text-sm font-semibold text-foreground first:pt-0">
               {t.replace(/^#+\s*/, '')}
             </h4>
           );
         }
         if (/^[-*]\s/.test(t)) {
           return (
-            <div key={i} className="flex gap-2 pl-1">
-              <span className="text-primary">•</span>
+            <div key={i} className="flex gap-2.5 pl-1">
+              <span className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
               <p>{inline(t.slice(2))}</p>
             </div>
           );
@@ -143,8 +234,13 @@ export function formatDuration(seconds: number): string {
 
 export function timeAgo(t: number, now: number): string {
   const s = Math.max(0, Math.round((now - t) / 1000));
+  if (s < 5) return 'just now';
   if (s < 60) return `${s}s ago`;
   if (s < 3600) return `${Math.floor(s / 60)}m ago`;
   if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
   return new Date(t).toLocaleDateString();
+}
+
+export function plural(n: number, word: string): string {
+  return `${n} ${word}${n === 1 ? '' : 's'}`;
 }

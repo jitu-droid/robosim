@@ -161,9 +161,9 @@ export const ALGORITHM_LABELS: Record<Algorithm, string> = {
 };
 
 export const ALGORITHM_COLORS: Record<Algorithm, string> = {
-  astar: '#a855f7',
+  astar: '#8b5cf6',
   rrt: '#f59e0b',
-  potentialField: '#22d3ee',
+  potentialField: '#06b6d4',
 };
 
 export const ROBOT_TYPE_LABELS: Record<RobotType, string> = {
