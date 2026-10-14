@@ -6,7 +6,7 @@ Built for **BCSE355L Cloud Architecture Design — Digital Assignment 3 (AWS Ser
 
 > Educational project. Not affiliated with or endorsed by Amazon Web Services. AWS ended support for RoboMaker on 10 September 2025.
 
-**Live demo:** _add your Vercel URL here_
+**Live demo:** https://robosim-ezk1.onrender.com
 
 ---
 
